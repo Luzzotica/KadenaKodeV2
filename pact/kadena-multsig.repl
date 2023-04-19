@@ -1,0 +1,149 @@
+(load "kda-env/init.repl")
+
+(begin-tx "Setup contract")
+
+(env-keys ["gov"])
+(env-data 
+  { 
+    "gov": { "keys": ["gov"], "pred": "="},
+    "upgrade": false
+  })
+
+(load "multisig-v1.pact")
+(load "kadena-multisig.pact")
+
+(commit-tx)
+
+
+
+(begin-tx "Can create multisig pact commands")
+(use kadena-multisig)
+
+(env-data 
+  { 
+    "ab": { "keys": ["alice-key", "bob-key"], "pred": "keys-any"},
+    "ac": { "keys": ["alice-key", "carol-key"], "pred": "keys-any"},
+    "init": true
+  })
+(expect-that "Can create pact command"
+  (= "gvSyP4hAs3BoL5PWnSo-QDCJZFDm5JtbboFtbvDHwmM")
+  (create-multisig-pact-command
+    "command1"
+    ["alice" "bob"]
+    []
+    (read-keyset "ab")  
+  )
+)
+(expect-that "Can create pact command"
+  (= "WAOwdSSYkZYMgfBd35q3wqT7uPhaxh35mRfVAdLJQJs")
+  (create-multisig-pact-command
+    "command2"
+    ["alice" "carol"]
+    [{ "pubKey": "alice", "sig": "alice-sig" }]
+    (read-keyset "ac")  
+  )
+)
+(expect-that "Sig was added to the table"
+  (= [{ "pubKey": "alice", "sig": "alice-sig" }])
+  (at "sigs" (get-multisig-pact-command "WAOwdSSYkZYMgfBd35q3wqT7uPhaxh35mRfVAdLJQJs"))
+)
+
+;; Can get the commands
+(expect-that "Can get one command"
+  (= "command2")
+  (at "cmd" (get-multisig-pact-command "WAOwdSSYkZYMgfBd35q3wqT7uPhaxh35mRfVAdLJQJs"))
+)
+(expect-that "Can get commands via signer"
+  (= 2)
+  (length (get-multisig-pact-commands-by-signer "alice"))
+)
+
+(commit-tx)
+
+
+
+(begin-tx "Can add signatures to multisig pact commands")
+(use kadena-multisig)
+
+;; Can add signatures
+(env-keys ["alice-key"])
+(expect-that "Can add sig"
+  (= "Signature added")
+  (add-signer 
+    "gvSyP4hAs3BoL5PWnSo-QDCJZFDm5JtbboFtbvDHwmM"
+    { "pubKey": "alice", "sig": "alice-sig" }  
+  )
+)
+(expect-that "Sig was added to the table"
+  (= [{ "pubKey": "alice", "sig": "alice-sig" }])
+  (at "sigs" (get-multisig-pact-command "gvSyP4hAs3BoL5PWnSo-QDCJZFDm5JtbboFtbvDHwmM"))
+)
+
+(env-keys ["bob-key"])
+(expect-that "Can add sig"
+  (= "Signature added")
+  (add-signer 
+    "gvSyP4hAs3BoL5PWnSo-QDCJZFDm5JtbboFtbvDHwmM"
+    { "pubKey": "bob", "sig": "bob-sig" }  
+  )
+)
+(expect-that "Sig was added to the table"
+  (= [{ "pubKey": "alice", "sig": "alice-sig" } { "pubKey": "bob", "sig": "bob-sig" }])
+  (at "sigs" (get-multisig-pact-command "gvSyP4hAs3BoL5PWnSo-QDCJZFDm5JtbboFtbvDHwmM"))
+)
+
+(commit-tx)
+
+
+
+(begin-tx "Can set resolved of multisig pact commands")
+(use kadena-multisig)
+
+(env-keys ["alice-key"])
+(expect-that "Can set resolved"
+  (= "Resolution status updated")
+  (set-resolved
+    "gvSyP4hAs3BoL5PWnSo-QDCJZFDm5JtbboFtbvDHwmM"
+    true
+  )
+)
+(expect-that "Resolved was updated"
+  (= true)
+  (at "resolved" (get-multisig-pact-command "gvSyP4hAs3BoL5PWnSo-QDCJZFDm5JtbboFtbvDHwmM"))
+)
+
+;; Can't add sig to resolved record
+(expect-failure "Can't add sig to resolved record"
+  "Record is already marked as resolved"
+  (add-signer 
+    "gvSyP4hAs3BoL5PWnSo-QDCJZFDm5JtbboFtbvDHwmM"
+    { "pubKey": "alice", "sig": "alice-sig2" }  
+  )
+)
+
+(commit-tx)
+
+
+
+(begin-tx "Can't execute guarded functions without proper signatures")
+(use kadena-multisig)
+
+;; Can't execute guarded functions without proper signatures
+(env-keys ["dave-key"])
+(expect-failure "Can't add signer without proper keys"
+  "Keyset failure (keys-any): [alice"   
+  (add-signer
+    "gvSyP4hAs3BoL5PWnSo-QDCJZFDm5JtbboFtbvDHwmM"
+    { "pubKey": "dave", "sig": "dave-sig" }
+) 
+)
+(expect-failure "Can't set resolved without proper keys"
+  "Keyset failure (keys-any): [alice"
+  (set-resolved
+    "gvSyP4hAs3BoL5PWnSo-QDCJZFDm5JtbboFtbvDHwmM"
+    true
+  )  
+)
+
+
+(commit-tx)
