@@ -1,22 +1,12 @@
 import 'package:code_text_field/code_text_field.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kadena_dart_sdk/kadena_dart_sdk.dart';
-import 'package:kadena_multisig/services/transactions/bloc/transaction_model_bloc.dart';
-import 'package:kadena_multisig/services/transactions/bloc/transaction_model_event.dart';
-import 'package:kadena_multisig/services/transactions/bloc/transaction_model_state.dart';
-import 'package:kadena_multisig/services/transactions/transaction_model.dart';
-import 'package:kadena_multisig/utils/constants.dart';
 import 'package:kadena_multisig/utils/string_constants.dart';
 import 'package:kadena_multisig/widgets/code_input_widget.dart';
 
 // ignore: depend_on_referenced_packages
 import 'package:highlight/languages/lisp.dart';
-import 'package:kadena_multisig/widgets/border_widget.dart';
 import 'package:kadena_multisig/widgets/title_widget.dart';
 import 'package:kadena_multisig/widgets/transaction_builder/capabilities/signer_capability_builder.dart';
-import 'package:kadena_multisig/widgets/transaction_builder/tabs/tab_selector.dart';
-import 'package:kadena_multisig/widgets/transaction_builder/tabs/tab_widget.dart';
 
 class TransactionBuilder extends StatefulWidget {
   static const gap = 16.0;

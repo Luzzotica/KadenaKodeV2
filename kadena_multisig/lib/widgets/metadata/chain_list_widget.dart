@@ -47,11 +47,6 @@ class ChainListWidgetState extends State<ChainListWidget> {
     int index,
     Set<String> chainIds,
   ) {
-    // final TransactionModelProvider metadata = Provider.of(
-
-    //   context,
-    //   listen: false,
-    // );
     Set<String> newChainIds = Set.from(chainIds);
     chainIds.contains(index.toString())
         ? newChainIds.remove(index.toString())

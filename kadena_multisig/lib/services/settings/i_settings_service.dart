@@ -7,7 +7,13 @@ abstract class ISettingsService extends ChangeNotifier {
 
   /// Updates the default metadata
   void updateDefaultMetadata({
-    required TransactionMetadata metadata,
+    Set<String>? chainIds,
+    bool? customUrl,
+    String? nodeUrl,
+    String? networkId,
+    int? gasLimit,
+    double? gasPrice,
+    int? ttl,
   });
 
   /// Updates the isLoading state

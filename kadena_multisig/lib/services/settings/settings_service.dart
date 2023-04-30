@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:kadena_multisig/services/settings/i_settings_service.dart';
 import 'package:kadena_multisig/services/transactions/transaction_metadata.dart';
 
@@ -11,9 +10,23 @@ class SettingsService extends ISettingsService {
 
   @override
   void updateDefaultMetadata({
-    required TransactionMetadata metadata,
+    Set<String>? chainIds,
+    bool? customUrl,
+    String? nodeUrl,
+    String? networkId,
+    int? gasLimit,
+    double? gasPrice,
+    int? ttl,
   }) {
-    defaultMetadata = metadata;
+    defaultMetadata = defaultMetadata.copyWith(
+      chainIds: chainIds,
+      customUrl: customUrl,
+      nodeUrl: nodeUrl,
+      networkId: networkId,
+      gasLimit: gasLimit,
+      gasPrice: gasPrice,
+      ttl: ttl,
+    );
     notifyListeners();
   }
 

@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:kadena_multisig/services/kadena/i_kadena_service.dart';
 import 'package:kadena_multisig/services/settings/i_settings_service.dart';
-import 'package:kadena_multisig/services/settings/settings_bloc.dart';
-import 'package:kadena_multisig/services/settings/settings_event.dart';
-import 'package:kadena_multisig/services/settings/settings_state.dart';
 import 'package:kadena_multisig/services/transactions/transaction_metadata.dart';
 import 'package:kadena_multisig/utils/constants.dart';
 import 'package:kadena_multisig/utils/string_constants.dart';
@@ -15,7 +11,6 @@ import 'package:kadena_multisig/widgets/metadata/chain_list_widget.dart';
 import 'package:kadena_multisig/widgets/metadata/integer_input_widget.dart';
 import 'package:kadena_multisig/widgets/metadata/decimal_input_widget.dart';
 import 'package:kadena_multisig/widgets/metadata/network_selection_widget.dart';
-import 'package:kadena_multisig/widgets/responsive_layout.dart';
 import 'package:kadena_multisig/widgets/title_widget.dart';
 import 'package:responsive_layout_grid/responsive_layout_grid.dart';
 
@@ -52,9 +47,7 @@ class SettingsPage extends StatelessWidget with GetItMixin {
                   chainIds: defaultMetadata.chainIds!,
                   onChainIdsChanged: (chainIds) {
                     GetIt.I<ISettingsService>().updateDefaultMetadata(
-                      metadata: TransactionMetadata(
-                        chainIds: chainIds,
-                      ),
+                      chainIds: chainIds,
                     );
                   },
                 ),
@@ -71,9 +64,7 @@ class SettingsPage extends StatelessWidget with GetItMixin {
                       nodeUrl: value,
                     );
                     GetIt.I<ISettingsService>().updateDefaultMetadata(
-                      metadata: TransactionMetadata(
-                        nodeUrl: value,
-                      ),
+                      nodeUrl: value,
                     );
                   },
                   onNetworkIdChanged: (value) {
@@ -81,9 +72,7 @@ class SettingsPage extends StatelessWidget with GetItMixin {
                       networkId: value,
                     );
                     GetIt.I<ISettingsService>().updateDefaultMetadata(
-                      metadata: TransactionMetadata(
-                        networkId: value,
-                      ),
+                      networkId: value,
                     );
                   },
                 ),
@@ -124,9 +113,7 @@ class SettingsPage extends StatelessWidget with GetItMixin {
                     controller: gasLimitController,
                     onChanged: (value) {
                       GetIt.I<ISettingsService>().updateDefaultMetadata(
-                        metadata: TransactionMetadata(
-                          gasLimit: value,
-                        ),
+                        gasLimit: value,
                       );
                     },
                     hintText: StringConstants.inputGasLimitHint,
@@ -149,9 +136,7 @@ class SettingsPage extends StatelessWidget with GetItMixin {
                     controller: gasPriceController,
                     onChanged: (value) {
                       GetIt.I<ISettingsService>().updateDefaultMetadata(
-                        metadata: TransactionMetadata(
-                          gasPrice: value,
-                        ),
+                        gasPrice: value,
                       );
                     },
                     hintText: StringConstants.inputGasPriceHint,
@@ -174,9 +159,7 @@ class SettingsPage extends StatelessWidget with GetItMixin {
                     controller: ttlController,
                     onChanged: (value) {
                       GetIt.I<ISettingsService>().updateDefaultMetadata(
-                        metadata: TransactionMetadata(
-                          ttl: value,
-                        ),
+                        ttl: value,
                       );
                     },
                     hintText: StringConstants.inputTtlHint,
