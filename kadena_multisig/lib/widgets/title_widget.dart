@@ -7,16 +7,16 @@ class TitleWidget extends StatefulWidget {
     super.key,
     required this.title,
     required this.child,
+    this.titleStyle,
     this.collapsible = false,
-    this.actionTitle = '',
     this.action,
   });
 
   final String title;
   final Widget child;
+  final TextStyle? titleStyle;
   final bool collapsible;
-  final String actionTitle;
-  final void Function()? action;
+  final Widget? action;
 
   @override
   State<TitleWidget> createState() => _TitleWidgetState();
@@ -47,16 +47,11 @@ class _TitleWidgetState extends State<TitleWidget> {
                 Expanded(
                   child: Text(
                     widget.title,
-                    style: Theme.of(context).textTheme.titleLarge,
+                    style: widget.titleStyle ??
+                        Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
-                if (widget.action != null)
-                  CustomButtonWidget(
-                    type: CustomButtonType.primary,
-                    onTap: widget.action,
-                    child: Text(widget.actionTitle,
-                        style: Theme.of(context).textTheme.titleLarge!),
-                  ),
+                if (widget.action != null) widget.action!,
                 const SizedBox(width: 8),
                 if (widget.collapsible)
                   Icon(

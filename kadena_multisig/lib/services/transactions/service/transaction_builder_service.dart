@@ -1,10 +1,8 @@
-import 'package:flutter/src/foundation/change_notifier.dart';
 import 'package:kadena_dart_sdk/models/pact_models.dart';
 import 'package:kadena_multisig/services/transactions/service/i_transaction_builder_service.dart';
 import 'package:kadena_multisig/services/transactions/transaction_model.dart';
 
-class TransactionBuilderService extends ChangeNotifier
-    implements ITransactionBuilderService {
+class TransactionBuilderService extends ITransactionBuilderService {
   @override
   int selectedIndex = 0;
 
@@ -55,6 +53,58 @@ class TransactionBuilderService extends ChangeNotifier
   }
 
   @override
+  void addSignerCapabilitiesAtIndex({
+    required int transactionIndex,
+  }) {
+    transactions[transactionIndex].signerCapabilitiesInfo =
+        transactions[transactionIndex].signerCapabilitiesInfo.copyWith(
+      signerCapabilities: [
+        ...transactions[transactionIndex]
+            .signerCapabilitiesInfo
+            .signerCapabilities,
+        SignerCapabilities(
+          pubKey: '',
+        ),
+      ],
+    );
+
+    notifyListeners();
+  }
+
+  @override
+  void deleteSignerCapabilitiesAtIndex({
+    required int transactionIndex,
+    required int signerCapabilitiesIndex,
+  }) {
+    transactions[transactionIndex]
+        .signerCapabilitiesInfo
+        .signerCapabilities
+        .removeAt(signerCapabilitiesIndex);
+    final int selectedSignerIndex = transactions[transactionIndex]
+        .signerCapabilitiesInfo
+        .selectedSignerIndex;
+    transactions[transactionIndex].signerCapabilitiesInfo.selectedSignerIndex =
+        selectedSignerIndex > signerCapabilitiesIndex
+            ? selectedSignerIndex - 1
+            : selectedSignerIndex;
+
+    notifyListeners();
+  }
+
+  @override
+  void updateSignerCapabilitiesAtIndex({
+    required int transactionIndex,
+    required int signerCapabilitiesIndex,
+    required SignerCapabilities signerCapabilities,
+  }) {
+    transactions[transactionIndex]
+        .signerCapabilitiesInfo
+        .signerCapabilities[signerCapabilitiesIndex] = signerCapabilities;
+
+    notifyListeners();
+  }
+
+  @override
   void addCapabilityAtIndex({
     required int transactionIndex,
     required int signerCapablitiesIndex,
@@ -70,6 +120,21 @@ class TransactionBuilderService extends ChangeNotifier
           [],
       Capability(name: ''),
     ];
+
+    notifyListeners();
+  }
+
+  @override
+  void deleteCapabilityAtIndex({
+    required int transactionIndex,
+    required int signerCapabilitiesIndex,
+    required int capabilityIndex,
+  }) {
+    transactions[transactionIndex]
+        .signerCapabilitiesInfo
+        .signerCapabilities[signerCapabilitiesIndex]
+        .clist!
+        .removeAt(capabilityIndex);
 
     notifyListeners();
   }

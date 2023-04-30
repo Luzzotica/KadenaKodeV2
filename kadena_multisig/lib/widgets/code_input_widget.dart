@@ -22,9 +22,10 @@ class _CodeInputWidgetState extends State<CodeInputWidget> {
       child: Container(
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
-          border: Border.all(
-            color: Theme.of(context).dividerColor,
-          ),
+          // border: Border.all(
+          //   color: Colors.white,
+          //   width: 1,
+          // ),
           borderRadius: BorderRadius.circular(8),
         ),
         // constraints: const BoxConstraints(

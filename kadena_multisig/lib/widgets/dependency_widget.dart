@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:kadena_multisig/services/kadena/i_kadena_service.dart';
 import 'package:kadena_multisig/services/kadena/kadena_provider.dart';
+import 'package:kadena_multisig/services/settings/i_settings_service.dart';
 import 'package:kadena_multisig/services/settings/settings_bloc.dart';
+import 'package:kadena_multisig/services/settings/settings_service.dart';
 import 'package:kadena_multisig/services/storage/i_storage_provider.dart';
 import 'package:kadena_multisig/services/storage/storage_provider.dart';
 import 'package:kadena_multisig/services/transactions/bloc/transaction_model_bloc.dart';
@@ -41,6 +43,30 @@ class _DependencyWidgetState extends State<DependencyWidget> {
         prefs: await SharedPreferences.getInstance(),
       ),
     );
+
+    final walletConnectService = WalletConnectService();
+    await walletConnectService.init(
+      projectId: DartDefines.projectId,
+      metadata: const PairingMetadata(
+        name: StringConstants.title,
+        description: StringConstants.description,
+        url: 'https://kadenakode.luzzotica.xyz',
+        icons: [
+          'https://kadena.io/favicon.ico',
+        ],
+      ),
+    );
+    GetIt.I.registerSingleton<IWalletConnectService>(
+      walletConnectService,
+    );
+
+    final IKadenaService kadenaProvider = KadenaProvider();
+    kadenaProvider.setNodeUrl(nodeUrl: DartDefines.nodeUrl);
+    kadenaProvider.setNetworkId(networkId: DartDefines.nodeNetwork);
+    GetIt.I.registerSingleton<IKadenaService>(kadenaProvider);
+
+    GetIt.I.registerSingleton<ISettingsService>(SettingsService());
+
     GetIt.I.registerSingleton<ITransactionBuilderService>(
       TransactionBuilderService(),
     );
@@ -63,76 +89,78 @@ class _DependencyWidgetState extends State<DependencyWidget> {
         );
       }
 
-      return MultiProvider(
-        providers: [
-          ChangeNotifierProxyProvider0<IWalletConnectService>(
-            create: (context) => WalletConnectService(context: context),
-            update: (context, walletConnectService) {
-              walletConnectService ??= WalletConnectService(context: context);
-              walletConnectService.init(
-                projectId: DartDefines.projectId,
-                metadata: const PairingMetadata(
-                  name: StringConstants.title,
-                  description: StringConstants.description,
-                  url: 'https://kadenakode.luzzotica.xyz',
-                  icons: [
-                    'https://kadena.io/favicon.ico',
-                  ],
-                ),
-              );
-              return walletConnectService;
-            },
-          ),
-          ChangeNotifierProxyProvider<IWalletConnectService, IKadenaService>(
-            create: (context) => KadenaProvider(
-              context: context,
-            ),
-            update: (context, walletConnectService, kadenaService) {
-              kadenaService ??= KadenaProvider(context: context);
-              kadenaService.setNodeUrl(nodeUrl: DartDefines.nodeUrl);
-              return kadenaService;
-            },
-          ),
-          // ChangeNotifierProxyProvider0(
-          //   create: (_) => SettingsProvider(),
-          //   update: (context, settingsProvider) {
-          //     settingsProvider ??= SettingsProvider();
-          //     settingsProvider.init();
-          //     return settingsProvider;
-          //   },
-          // ),
-          // ChangeNotifierProxyProvider<SettingsProvider,
-          //     TransactionMetadataProvider>(
-          //   create: (context) => TransactionMetadataProvider(
-          //     TransactionMetadata(),
-          //   ),
-          //   update: (context, storageProvider, settingsProvider) =>
-          //       TransactionMetadataProvider(settingsProvider.metadata),
-          // ),
-          // ProxyProvider<TransactionMetadataProvider, void>(
-          //   create: null,
-          //   update: (context, transactionMetadataProvider, _) {
-          //     transactionMetadataProvider.addListener(() {
-          //       context.read<SettingsProvider>().saveMetadata();
-          //     });
-          //   },
-          // ),
-          // ChangeNotifierProxyProvider<SettingsProvider,
-          //         TransactionMetadataProvider>(
-          //     create: (_) => TransactionMetadataProvider()),
-        ],
-        child: MultiBlocProvider(
-          providers: [
-            BlocProvider<SettingsBloc>(
-              create: (context) => SettingsBloc(),
-            ),
-            BlocProvider<TransactionModelBloc>(
-              create: (context) => TransactionModelBloc(),
-            ),
-          ],
-          child: widget.child,
-        ),
-      );
+      return widget.child;
+
+      // MultiProvider(
+      //   providers: [
+      //     ChangeNotifierProxyProvider0<IWalletConnectService>(
+      //       create: (context) => WalletConnectService(context: context),
+      //       update: (context, walletConnectService) {
+      //         walletConnectService ??= WalletConnectService(context: context);
+      //         walletConnectService.init(
+      //           projectId: DartDefines.projectId,
+      //           metadata: const PairingMetadata(
+      //             name: StringConstants.title,
+      //             description: StringConstants.description,
+      //             url: 'https://kadenakode.luzzotica.xyz',
+      //             icons: [
+      //               'https://kadena.io/favicon.ico',
+      //             ],
+      //           ),
+      //         );
+      //         return walletConnectService;
+      //       },
+      //     ),
+      //     ChangeNotifierProxyProvider<IWalletConnectService, IKadenaService>(
+      //       create: (context) => KadenaProvider(
+      //         context: context,
+      //       ),
+      //       update: (context, walletConnectService, kadenaService) {
+      //         kadenaService ??= KadenaProvider(context: context);
+      //         kadenaService.setNodeUrl(nodeUrl: DartDefines.nodeUrl);
+      //         return kadenaService;
+      //       },
+      //     ),
+      //     // ChangeNotifierProxyProvider0(
+      //     //   create: (_) => SettingsProvider(),
+      //     //   update: (context, settingsProvider) {
+      //     //     settingsProvider ??= SettingsProvider();
+      //     //     settingsProvider.init();
+      //     //     return settingsProvider;
+      //     //   },
+      //     // ),
+      //     // ChangeNotifierProxyProvider<SettingsProvider,
+      //     //     TransactionMetadataProvider>(
+      //     //   create: (context) => TransactionMetadataProvider(
+      //     //     TransactionMetadata(),
+      //     //   ),
+      //     //   update: (context, storageProvider, settingsProvider) =>
+      //     //       TransactionMetadataProvider(settingsProvider.metadata),
+      //     // ),
+      //     // ProxyProvider<TransactionMetadataProvider, void>(
+      //     //   create: null,
+      //     //   update: (context, transactionMetadataProvider, _) {
+      //     //     transactionMetadataProvider.addListener(() {
+      //     //       context.read<SettingsProvider>().saveMetadata();
+      //     //     });
+      //     //   },
+      //     // ),
+      //     // ChangeNotifierProxyProvider<SettingsProvider,
+      //     //         TransactionMetadataProvider>(
+      //     //     create: (_) => TransactionMetadataProvider()),
+      //   ],
+      //   child: MultiBlocProvider(
+      //     providers: [
+      //       BlocProvider<SettingsBloc>(
+      //         create: (context) => SettingsBloc(),
+      //       ),
+      //       BlocProvider<TransactionModelBloc>(
+      //         create: (context) => TransactionModelBloc(),
+      //       ),
+      //     ],
+      //     child: widget.child,
+      //     ),
+      //   );
     }));
   }
 }

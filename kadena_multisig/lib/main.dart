@@ -91,12 +91,11 @@ class MyApp extends StatelessWidget {
         ),
         canvasColor: StyleConstants.backgroundColorLighter,
         inputDecorationTheme: const InputDecorationTheme(
-          hintStyle: TextStyle(color: Colors.white),
+          hintStyle: TextStyle(color: Colors.white60),
           labelStyle: TextStyle(color: Colors.white60),
           iconColor: StyleConstants.primaryColor,
           enabledBorder: OutlineInputBorder(
-            borderSide:
-                BorderSide(color: StyleConstants.backgroundColorLighter),
+            borderSide: BorderSide(color: Colors.white54),
             borderRadius: BorderRadius.all(Radius.circular(4)),
           ),
           border: OutlineInputBorder(

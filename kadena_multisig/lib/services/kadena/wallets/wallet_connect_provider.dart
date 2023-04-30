@@ -1,10 +1,8 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:kadena_dart_sdk/kadena_dart_sdk.dart';
 import 'package:kadena_multisig/services/kadena/wallets/i_wallet_provider.dart';
 import 'package:kadena_multisig/services/wallet_connect/i_wallet_connect_service.dart';
-import 'package:provider/provider.dart';
 import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
 
 class WalletConnectProvider implements IWalletProvider, Disposable {
@@ -14,11 +12,8 @@ class WalletConnectProvider implements IWalletProvider, Disposable {
   Future<void> onDispose() async {}
 
   @override
-  Future<List<String>> connect({
-    required BuildContext context,
-  }) async {
-    SessionData session =
-        await Provider.of<IWalletConnectService>(context).connect();
+  Future<List<String>> connect() async {
+    SessionData session = await GetIt.I<IWalletConnectService>().connect();
     return session.namespaces.values.first.accounts
         .map(
           (e) => NamespaceUtils.getAccount(

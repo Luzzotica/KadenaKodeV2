@@ -10,6 +10,8 @@ class Constants {
 class StyleConstants {
   static const Color backgroundColor = Color(0xFF111B25);
   static const Color backgroundColorLighter = Color.fromARGB(255, 31, 48, 63);
+  static const Color backgroundColorLightest = Color.fromARGB(255, 41, 64, 84);
+  static const Color backgroundColorDarkGray = Color.fromARGB(255, 30, 30, 30);
   static const Color primaryColor = Color(0xFF2980B9);
 
   static const Color darkGray = Color(0xFF141414);

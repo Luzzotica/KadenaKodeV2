@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
 class BorderWidget extends StatelessWidget {
-  final Widget child;
-  final double padding;
-
   const BorderWidget({
     super.key,
     required this.child,
+    this.backgroundColor = Colors.transparent,
     this.padding = 16,
   });
+
+  final Widget child;
+  final Color backgroundColor;
+  final double padding;
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +22,7 @@ class BorderWidget extends StatelessWidget {
           width: 1,
         ),
         borderRadius: BorderRadius.circular(8),
+        color: backgroundColor,
       ),
       child: child,
     );

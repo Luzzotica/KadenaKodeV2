@@ -8,7 +8,7 @@ enum WalletProviderType {
 abstract class IWalletProvider {
   /// Connect to the wallet provider. Returns the list of public keys or accounts
   /// that are available to the user.
-  Future<List<String>> connect({required BuildContext context});
+  Future<List<String>> connect();
 
   /// Disconnect from the wallet provider.
   Future<void> disconnect({dynamic reason});

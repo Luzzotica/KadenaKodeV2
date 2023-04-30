@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:kadena_dart_sdk/kadena_dart_sdk.dart';
 import 'package:kadena_multisig/services/wallet_connect/i_wallet_connect_chain.dart';
 import 'package:kadena_multisig/services/kadena/models/pact_transaction_response.dart';
@@ -33,17 +34,8 @@ class KadenaProvider
   @override
   IWalletProvider? walletProvider;
 
-  final BuildContext context;
-
-  KadenaProvider({
-    required this.context,
-  }) {
-    Provider.of<IWalletConnectService>(
-      context,
-      listen: false,
-    ).registerChain(
-      chain: this,
-    );
+  KadenaProvider() {
+    GetIt.I<IWalletConnectService>().registerChain(chain: this);
   }
 
   @override
@@ -74,9 +66,7 @@ class KadenaProvider
       walletProvider = WalletConnectProvider();
     }
 
-    List<String> accounts = await walletProvider!.connect(
-      context: context,
-    );
+    List<String> accounts = await walletProvider!.connect();
 
     // If the provider is WalletConnect, get the accounts
     if (providerType == WalletProviderType.walletConnect) {

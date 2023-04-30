@@ -13,11 +13,7 @@ class WalletConnectService
   @override
   SignClient? signClient;
 
-  final BuildContext context;
-
-  WalletConnectService({
-    required this.context,
-  });
+  WalletConnectService();
 
   @override
   Future<void> init({

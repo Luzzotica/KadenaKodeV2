@@ -37,6 +37,13 @@ class StringConstants {
   static const String addCapability = 'Add Capability';
   static const String signerPublicKey = 'Signer Public Key:';
   static const String inputSignerPublicKeyHint = 'Enter Signer Public Key';
+  static const String noSigners = 'No Signers';
+  static const String capabilities = 'Capabilities:';
+  static const String noCapabilities = 'No Capabilities';
+  static const String capabilityName = 'Name (Full Reference):';
+  static const String capabilityNameHint = 'e.g. coin.TRANSFER';
+  static const String capabilityArgs = 'Args:';
+  static const String capabilityArgsHint = 'e.g. "abc", "def", 1.0';
 
   // Network Selection
   static const String urlDefault = 'https://api.testnet.chainweb.com';

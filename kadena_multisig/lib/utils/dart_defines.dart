@@ -3,6 +3,10 @@ class DartDefines {
     'NODE_URL',
     defaultValue: 'https://api.testnet.chainweb.com',
   );
+  static const String nodeNetwork = String.fromEnvironment(
+    'NODE_NETWORK',
+    defaultValue: 'testnet04',
+  );
 
   // WalletConnect information
   static const String projectId = String.fromEnvironment(

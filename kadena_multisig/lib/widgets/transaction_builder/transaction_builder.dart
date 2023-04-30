@@ -12,7 +12,7 @@ import 'package:kadena_multisig/widgets/code_input_widget.dart';
 
 // ignore: depend_on_referenced_packages
 import 'package:highlight/languages/lisp.dart';
-import 'package:kadena_multisig/widgets/metadata/border_widget.dart';
+import 'package:kadena_multisig/widgets/border_widget.dart';
 import 'package:kadena_multisig/widgets/title_widget.dart';
 import 'package:kadena_multisig/widgets/transaction_builder/capabilities/signer_capability_builder.dart';
 import 'package:kadena_multisig/widgets/transaction_builder/tabs/tab_selector.dart';
